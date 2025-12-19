@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Dashboard</h1>
+  <form method="post" action="/sync-all">
+    <button class="btn btn-primary" type="submit">Sync all enabled domains now</button>
+  </form>
+</div>
+<p>
+  {% if next_run %}
+  Next scheduled run: <strong>{{ next_run }}</strong>
+  {% else %}
+  No scheduled runs configured.
+  {% endif %}
+</p>
+<div class="row">
+  {% for domain in domains %}
+  <div class="col-md-4">
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between">
+        <span>{{ domain.name }}</span>
+        {% if domain.enabled %}
+        <span class="badge bg-success">Enabled</span>
+        {% else %}
+        <span class="badge bg-secondary">Disabled</span>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <p>Last sync: {{ domain.last_sync_finished_at or "never" }}</p>
+        <p>Status: {{ domain.last_sync_status or "n/a" }}</p>
+        <p>Summary: {{ domain.last_sync_summary or "-" }}</p>
+        <p>Cloudflare zone: {% if domain.cf_zone_exists %}found{% else %}missing{% endif %}</p>
+        <div class="d-flex justify-content-between">
+          <a class="btn btn-sm btn-outline-primary" href="/domains/{{ domain.id }}">Details</a>
+          <form method="post" action="/domains/{{ domain.id }}/sync">
+            <button class="btn btn-sm btn-primary" type="submit">Sync now</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<h2>Recent Sync Runs</h2>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Domain</th>
+      <th>Started</th>
+      <th>Finished</th>
+      <th>Status</th>
+      <th>Summary</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for run in runs %}
+    <tr>
+      <td><a href="/history/{{ run.id }}">{{ run.id }}</a></td>
+      <td>{{ run.domain_name }}</td>
+      <td>{{ run.started_at }}</td>
+      <td>{{ run.finished_at }}</td>
+      <td>{{ run.status }}</td>
+      <td>{{ run.plan_summary }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+

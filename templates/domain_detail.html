@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Domain: {{ domain.name }}</h1>
+<div class="mb-3">
+  <form class="d-inline" method="post" action="/domains/{{ domain.id }}/preview">
+    <button class="btn btn-secondary" type="submit">Preview plan</button>
+  </form>
+  <form class="d-inline" method="post" action="/domains/{{ domain.id }}/sync">
+    <button class="btn btn-primary" type="submit">Sync now</button>
+  </form>
+</div>
+{% if plan_preview %}
+<div class="card mb-3">
+  <div class="card-header">Latest plan preview</div>
+  <div class="card-body">
+    <pre class="small">{{ plan_preview | tojson(indent=2) }}</pre>
+  </div>
+  <div class="card-footer">
+    Summary: {{ domain.last_plan_preview_summary }} at {{ domain.last_plan_preview_at }}
+  </div>
+</div>
+{% endif %}
+<ul class="nav nav-tabs" id="domainTabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="da-tab" data-bs-toggle="tab" data-bs-target="#da" type="button" role="tab">DirectAdmin</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="cf-tab" data-bs-toggle="tab" data-bs-target="#cf" type="button" role="tab">Cloudflare</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="plan-tab" data-bs-toggle="tab" data-bs-target="#plan" type="button" role="tab">Plan</button>
+  </li>
+  </ul>
+<div class="tab-content mt-3">
+  <div class="tab-pane fade show active" id="da" role="tabpanel">
+    {% if da_error %}
+    <div class="alert alert-danger">Error fetching DirectAdmin records: {{ da_error }}</div>
+    {% endif %}
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Content</th>
+          <th>TTL</th>
+          <th>Priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in da_records %}
+        <tr>
+          <td>{{ r.type }}</td>
+          <td>{{ r.name }}</td>
+          <td>{{ r.content }}</td>
+          <td>{{ r.ttl }}</td>
+          <td>{{ r.priority }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="cf" role="tabpanel">
+    {% if cf_error %}
+    <div class="alert alert-danger">Error fetching Cloudflare records: {{ cf_error }}</div>
+    {% endif %}
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Name</th>
+          <th>Content</th>
+          <th>TTL</th>
+          <th>Priority</th>
+          <th>Proxied</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in cf_records %}
+        <tr>
+          <td>{{ r.type }}</td>
+          <td>{{ r.name }}</td>
+          <td>{{ r.content }}</td>
+          <td>{{ r.ttl }}</td>
+          <td>{{ r.priority }}</td>
+          <td>{{ r.proxied }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="plan" role="tabpanel">
+    {% if plan_preview %}
+    <pre class="small">{{ plan_preview | tojson(indent=2) }}</pre>
+    {% else %}
+    <p>No plan preview yet. Click "Preview plan".</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

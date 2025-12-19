@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Scheduling</h1>
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Global default interval (minutes)</label>
+    <input
+      class="form-control"
+      type="number"
+      name="default_interval_minutes"
+      min="1"
+      value="{{ settings.default_sync_interval_minutes if settings else 15 }}"
+    />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">ACME (_acme-challenge) interval (minutes)</label>
+    <input
+      class="form-control"
+      type="number"
+      name="acme_interval_minutes"
+      min="1"
+      value="{{ settings.acme_sync_interval_minutes if settings and settings.acme_sync_interval_minutes else '' }}"
+    />
+    <div class="form-text">
+      If empty, ACME records use the global interval.
+    </div>
+  </div>
+  <button class="btn btn-primary" type="submit">Save</button>
+</form>
+<h2 class="mt-4">Per-domain overrides</h2>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Domain</th>
+      <th>Enabled</th>
+      <th>Interval (minutes)</th>
+      <th>Next run</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in domains %}
+    <tr>
+      <td>{{ d.name }}</td>
+      <td>{% if d.enabled %}Yes{% else %}No{% endif %}</td>
+      <td>{{ d.sync_interval_minutes or settings.default_sync_interval_minutes }}</td>
+      <td>{{ next_runs.get(d.id) or "n/a" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

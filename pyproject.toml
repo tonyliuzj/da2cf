@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "da2cf"
+version = "0.1.0"
+description = "Web app to sync DNS records from DirectAdmin to Cloudflare"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{ include = "da2cf", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.0"
+uvicorn = { extras = ["standard"], version = "^0.32.0" }
+sqlmodel = "^0.0.22"
+requests = "^2.32.3"
+python-dotenv = "^1.0.1"
+apscheduler = "^3.10.4"
+jinja2 = "^3.1.4"
+pydantic-settings = "^2.6.1"
+pytz = "^2024.1"
+itsdangerous = "^2.2.0"
+python-multipart = "^0.0.9"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+responses = "^0.25.3"
+black = "^24.10.0"
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+

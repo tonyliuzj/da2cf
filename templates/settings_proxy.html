@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Proxy Settings</h1>
+<p class="text-muted">
+  These settings control the Cloudflare "proxied" state for A, AAAA, and CNAME records across all domains.
+</p>
+<form method="post">
+  <div class="form-check form-switch mb-3">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      id="proxy_a"
+      name="proxy_a"
+      {% if settings and settings.proxy_a %}checked{% endif %}
+    />
+    <label class="form-check-label" for="proxy_a">Proxy A records</label>
+  </div>
+  <div class="form-check form-switch mb-3">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      id="proxy_aaaa"
+      name="proxy_aaaa"
+      {% if settings and settings.proxy_aaaa %}checked{% endif %}
+    />
+    <label class="form-check-label" for="proxy_aaaa">Proxy AAAA records</label>
+  </div>
+  <div class="form-check form-switch mb-3">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      id="proxy_cname"
+      name="proxy_cname"
+      {% if settings and settings.proxy_cname %}checked{% endif %}
+    />
+    <label class="form-check-label" for="proxy_cname">Proxy CNAME records</label>
+  </div>
+  <hr />
+  <div class="form-check form-switch mb-3">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      id="proxy_host"
+      name="proxy_host"
+      {% if settings and settings.proxy_host %}checked{% endif %}
+    />
+    <label class="form-check-label" for="proxy_host">Proxy host records (root/@ and www)</label>
+  </div>
+  <div class="form-check form-switch mb-3">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      id="proxy_sub"
+      name="proxy_sub"
+      {% if settings and settings.proxy_sub %}checked{% endif %}
+    />
+    <label class="form-check-label" for="proxy_sub">Proxy subdomains (all other levels)</label>
+  </div>
+  <button class="btn btn-primary" type="submit">Save</button>
+</form>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Sync History</h1>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Domain</th>
+      <th>Started</th>
+      <th>Finished</th>
+      <th>Status</th>
+      <th>Summary</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for run in runs %}
+    <tr>
+      <td><a href="/history/{{ run.id }}">{{ run.id }}</a></td>
+      <td>{{ run.domain_name }}</td>
+      <td>{{ run.started_at }}</td>
+      <td>{{ run.finished_at }}</td>
+      <td>{{ run.status }}</td>
+      <td>{{ run.plan_summary }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+

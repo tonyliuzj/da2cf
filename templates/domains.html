@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Domains</h1>
+{% if da_error %}
+<div class="alert alert-danger">
+  Error fetching domains from DirectAdmin: {{ da_error }}
+</div>
+{% endif %}
+<form method="post">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Domain</th>
+        <th>Enabled</th>
+        <th>Cloudflare zone</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for name in da_domains %}
+      {% set dom = domain_map.get(name) %}
+      <tr>
+        <td>
+          <input
+            type="checkbox"
+            name="selected_domains"
+            value="{{ name }}"
+            {% if dom and dom.enabled %}checked{% endif %}
+          />
+        </td>
+        <td>{{ name }}</td>
+        <td>{% if dom and dom.enabled %}Yes{% else %}No{% endif %}</td>
+        <td>
+          {% if dom %}
+          {% if dom.cf_zone_exists %}<span class="badge bg-success">Found</span>
+          {% else %}<span class="badge bg-warning text-dark">Not found</span>{% endif %}
+          {% else %}
+          -
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <button class="btn btn-primary" type="submit">Save selection</button>
+</form>
+{% endblock %}
+

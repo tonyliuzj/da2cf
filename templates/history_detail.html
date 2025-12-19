@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Sync Run {{ run.id }}</h1>
+<p><strong>Domain:</strong> {{ run.domain_name }}</p>
+<p><strong>Status:</strong> {{ run.status }}</p>
+<p><strong>Started:</strong> {{ run.started_at }}</p>
+<p><strong>Finished:</strong> {{ run.finished_at }}</p>
+<p>
+  <strong>Counts:</strong>
+  created={{ run.created_count }},
+  updated={{ run.updated_count }},
+  deleted={{ run.deleted_count }},
+  skipped={{ run.skipped_count }},
+  noop={{ run.noop_count }}
+</p>
+{% if run.error_summary %}
+<div class="alert alert-warning">{{ run.error_summary }}</div>
+{% endif %}
+{% if run.plan_details %}
+<h2>Plan Details</h2>
+<pre class="small">{{ run.plan_details | tojson(indent=2) }}</pre>
+{% endif %}
+{% endblock %}
+
